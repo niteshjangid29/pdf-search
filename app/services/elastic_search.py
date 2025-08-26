@@ -20,18 +20,16 @@ class ElasticSearchResponse(BaseModel):
     block_index: int
     content: str
 
-class ElasticSearchService:
-    es: Elasticsearch
+es = Elasticsearch(
+    hosts=["http://localhost:9200"],
+    api_key="M0JKVzBwZ0JIdnFXaFR0ZnpfZEk6WEZIUTAzU0NLb3p5Rzl3ejkwVkJxdw=="
+)
 
-    def __init__(self, host:str, api_key: str):
-        self.es = Elasticsearch(
-            hosts=[host],
-            api_key=api_key
-        )
+class ElasticSearchService:
 
     def create_index(self):
-        if not self.es.indices.exists(index=settings.INDEX_NAME):
-            self.es.indices.create(
+        if not es.indices.exists(index=settings.INDEX_NAME):
+            es.indices.create(
                 index=settings.INDEX_NAME,
                 body={
                     "mappings": {
@@ -56,13 +54,9 @@ class ElasticSearchService:
     def index_document(self, documents: List[ElasticSearchDocument]):
         self.create_index()
 
-        print("Indexing documents...")
-
         for doc in documents:
             if not doc.content.strip():
                 continue
-
-            print("Indexing document: 1")
 
             es_doc = ElasticSearchDocument(
                 pdf_id=doc.pdf_id,
@@ -73,11 +67,7 @@ class ElasticSearchService:
                 embedding=doc.embedding
             )
 
-            print("Indexing document: 2")
-
-            self.es.index(index=settings.INDEX_NAME, document=es_doc.dict())
-
-            print("Indexed document: 3")
+            es.index(index=settings.INDEX_NAME, document=es_doc.dict())
 
 
     def search(self, pdf_id: uuid.UUID, query_embedding: List[float], topk: int = 5) -> List[ElasticSearchResponse]:
@@ -93,7 +83,7 @@ class ElasticSearchService:
             }
         }
 
-        response = self.es.search(
+        response = es.search(
             index=settings.INDEX_NAME,
             knn=knn_query,
             source_excludes=["embedding"]
@@ -111,4 +101,4 @@ class ElasticSearchService:
             for hit in hits
         ]
 
-search_service = ElasticSearchService(settings.ES_HOST, settings.ES_API_KEY)
+search_service = ElasticSearchService()

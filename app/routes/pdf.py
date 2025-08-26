@@ -25,18 +25,14 @@ async def upload_pdf(
     try:
         pdf_file = await file.read()
 
-        print("step 1")
-
         extracted_data = extract_pdf_content(pdf_file)
 
-        print("step 2")
 
         if extracted_data.error:
             raise HTTPException(status_code=500, detail=f"Error extracting PDF content: {extracted_data.error}")
         
         pdf_id = uuid.uuid4()
 
-        print("step 3")
 
         db_pdf = PdfDocumentCreate(
             id=pdf_id,
@@ -44,11 +40,7 @@ async def upload_pdf(
             file_name=file.filename,
         )
 
-        print("step 4")
-
         response = create_pdf_document(db_pdf, db)
-
-        print("step 5")
 
         if response is None:
             raise HTTPException(status_code=500, detail="Error saving PDF document to the database.")
@@ -66,13 +58,7 @@ async def upload_pdf(
             )
             results.append(es_doc)
 
-        print("step 6", "".join(x.type for x in results))
-
-        print("step 6.1", search_service.ping())
-
         search_service.index_document(results)
-
-        print("step 7")
 
         return response
 

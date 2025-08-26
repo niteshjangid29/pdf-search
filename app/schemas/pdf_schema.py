@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 import uuid
+from datetime import datetime
 
 class PdfDocumentCreate(BaseModel):
     id: uuid.UUID
@@ -7,7 +8,7 @@ class PdfDocumentCreate(BaseModel):
     file_name: str
 
 class PdfDocument(PdfDocumentCreate):
-    created_at: str
+    created_at: datetime
 
     class Config:
         from_attributes = True
