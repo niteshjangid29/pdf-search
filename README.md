@@ -17,36 +17,16 @@ For deploying this PDF search backend, a robust and scalable set of AWS services
   - **AWS S3:** Storage for uploaded PDFs and processed results.
 
 
-# 🚀 Project Setup and Requirements
+# 🚀 Project Setup Locally
 
-### Prerequisites
- - **Docker Desktop:** Ensure Docker Desktop is installed and running on your machine.
- - [Docker Desktop](https://www.docker.com/products/docker-desktop)
+## 1. Using Docker
 
-### Clone the Repository
- - Clone the repository using Git
+- Clone the repository using Git
     ```sh
     git clone https://github.com/niteshjangid29/pdf-search.git
     cd pdf-search
     ```
 
-### RUN ElasticSearch (preferred using docker)
- - Run below command in terminal to start ElasticSearch
-    ```sh
-    curl -fsSL https://elastic.co/start-local | sh
-    ```
-
- - **Note:** You will get credentials in the terminal output, which are required for accessing the Elasticsearch API.
-    ```sh
-    Elasticsearch UserName, Password and API Key (required for further steps)
-    ```
-
- - Verify that Elasticsearch is running by accessing the following URL in your browser:
-   ```sh
-   http://localhost:9200
-   ```
-
-### RUN Backend API
 - Update the environment variables in the `.env` file (Database is Hosted)
     ```sh
     DATABASE_URL = "postgresql://neondb_owner:npg_mOL4n7eRUwEz@ep-square-tree-ad3xa2qc-pooler.c-2.us-east-1.aws.neon.tech/pdf-data?sslmode=require"
@@ -65,6 +45,29 @@ For deploying this PDF search backend, a robust and scalable set of AWS services
 - Run the Docker container
     ```sh
     docker run -p 8000:8000 pdf-search
+    ```
+
+## 2. Setup without Docker
+- Clone the repository
+    ```sh
+    git clone https://github.com/niteshjangid29/pdf-search.git
+    cd pdf-search
+    ```
+
+- Create the virtual environment
+    ```sh
+    python -m venv venv
+    source venv/bin/activate
+    ```
+
+- Install Dependencies
+    ```sh
+    pip install -r requirements.txt
+    ```
+
+- Run the Application
+    ```sh
+    uvicorn main:app --reload --port 8000
     ```
 
 ### Lets go!
