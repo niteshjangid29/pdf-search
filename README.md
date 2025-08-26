@@ -1,3 +1,5 @@
+# 🚀 Update (This project is hosted)
+ - **Hosted Backend:** [https://pdf-search.niteshjangid.tech/](https://pdf-search.niteshjangid.tech/)
 
 # ☁️ AWS / Cloud Services for Deployment
 For deploying this PDF search backend, a robust and scalable set of AWS services would be ideal:
