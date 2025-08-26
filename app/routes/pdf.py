@@ -81,6 +81,7 @@ async def search(
                 raise HTTPException(status_code=404, detail="PDF document not found or access denied.")
             
         search_results = search_service.search(pdf_id=search_request.pdf_id, query_embedding=query_embedding)
+        print(search_service.es.ping())
 
         return search_results
 
