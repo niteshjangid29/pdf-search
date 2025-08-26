@@ -71,21 +71,32 @@ class ElasticSearchService:
 
 
     def search(self, pdf_id: uuid.UUID, query_embedding: List[float], topk: int = 5) -> List[ElasticSearchResponse]:
-        knn_query = {
+        query = None
+        if pdf_id:
+            query = {
+                "bool": {
+                    "filter": [
+                        {
+                            "term": {
+                                "pdf_id": str(pdf_id)
+                            }
+                        }
+                    ]
+                }
+            }
+
+        knn = {
             "field": "embedding",
             "query_vector": query_embedding,
             "k": topk,
-            "num_candidates": 50,
-            "filter": {
-                "term": {
-                    "pdf_id": str(pdf_id)
-                }
-            }
+            "num_candidates": 50
         }
 
         response = es.search(
             index=settings.INDEX_NAME,
-            knn=knn_query,
+            query=query,
+            knn=knn,
+            size=topk,
             source_excludes=["embedding"]
         )
 
