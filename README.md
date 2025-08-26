@@ -16,10 +16,38 @@ For deploying this PDF search backend, a robust and scalable set of AWS services
   - **AWS Lambda:** Serverless functions to process PDFs. This will download the pdf from S3, perform extraction, embedding and indexing in OpenSearch.
   - **AWS S3:** Storage for uploaded PDFs and processed results.
 
+# 🚀 Workflow: PDF Upload & Search
+**1. Get Access 🔑:** First, you **register** and **login** to get a secure access token (JWT). You'll need this token for most actions.
+
+**2. Upload PDF ⬆️:** You **upload** a PDF file to the app. The backend then:
+ - ***Extracts everything*** from the PDF: text, tables (formatted into searchable strings), and even text from images (using OCR).
+
+ - ***Creates embeddings*** for all this content.
+
+ - ***Stores the content*** in Elasticsearch for fast searching and saves the PDF's details in PostgreSQL.
+
+**3. Search Your PDFs 🔍:** You can now search by typing a query. The app uses your query's embeddings to find the most relevant pieces of content across all your uploaded PDFs.
+
+**4.Manage Your Files 📂:** You can also easily view a list of all the PDFs you've uploaded.
+
+# 🚀 Technologies Used
+- Backend Framework: FastAPI (Python)
+
+- Database: PostgreSQL (with SQLAlchemy ORM)
+
+- Search Engine: Elasticsearch
+
+- Vector Embeddings: sentence-transformers
+
+- PDF Parsing: PyMuPDF
+
+- OCR: PyTesseract (requires Tesseract-OCR engine)
+
+- Containerization: Docker
 
 # 🚀 Project Setup Locally
 
-## 1. Using Docker
+## 1. Using Docker (Recommended)
 
 - Clone the repository using Git
     ```sh
@@ -69,6 +97,8 @@ For deploying this PDF search backend, a robust and scalable set of AWS services
     ```sh
     uvicorn main:app --reload --port 8000
     ```
+
+**Note:** This may additionally require to install `PyTesseract` for image-ocr
 
 ### Lets go!
 The project is now set up and running! You can start using the PDF search API at [http://localhost:8000](http://localhost:8000)
