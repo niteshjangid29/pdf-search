@@ -28,7 +28,7 @@ For deploying this PDF search backend, a robust and scalable set of AWS services
 
 **3. Search Your PDFs 🔍:** You can now search by typing a query. The app uses your query's embeddings to find the most relevant pieces of content across all your uploaded PDFs.
 
-**4.Manage Your Files 📂:** You can also easily view a list of all the PDFs you've uploaded.
+**4. Manage Your Files 📂:** You can also easily view a list of all the PDFs you've uploaded.
 
 # 🚀 Technologies Used
 - Backend Framework: FastAPI (Python)
@@ -74,7 +74,7 @@ For deploying this PDF search backend, a robust and scalable set of AWS services
 
 - Create the virtual environment
     ```sh
-    python -m venv venv
+    python3 -m venv venv
     source venv/bin/activate
     ```
 
