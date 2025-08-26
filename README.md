@@ -55,16 +55,6 @@ For deploying this PDF search backend, a robust and scalable set of AWS services
     cd pdf-search
     ```
 
-- Update the environment variables in the `.env` file (Database is Hosted)
-    ```sh
-    DATABASE_URL = "postgresql://neondb_owner:npg_mOL4n7eRUwEz@ep-square-tree-ad3xa2qc-pooler.c-2.us-east-1.aws.neon.tech/pdf-data?sslmode=require"
-    JWT_SECRET = "fdsfneahuw324234ggafergvjndsncwei38aqovzje2uf"
-    EXPIRY_TIME=60
-    ES_HOST = "http://localhost:9200"
-    ES_API_KEY = "<your-elasticsearch-api-key>"
-    INDEX_NAME = "pdf_documents"
-   ```
-
 - Build the Docker image of the project (in root of the project)
     ```sh
     docker build -t pdf-search .
