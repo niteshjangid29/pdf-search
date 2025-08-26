@@ -20,16 +20,18 @@ class ElasticSearchResponse(BaseModel):
     block_index: int
     content: str
 
-es = Elasticsearch(
-    hosts=["http://localhost:9200"],
-    api_key="M0JKVzBwZ0JIdnFXaFR0ZnpfZEk6WEZIUTAzU0NLb3p5Rzl3ejkwVkJxdw=="
-)
-
 class ElasticSearchService:
+    es: Optional[Elasticsearch] = None
+
+    def __init__(self):
+        self.es = Elasticsearch(
+            hosts=[settings.ES_HOST],
+            api_key=settings.ES_API_KEY
+        )
 
     def create_index(self):
-        if not es.indices.exists(index=settings.INDEX_NAME):
-            es.indices.create(
+        if not self.es.indices.exists(index=settings.INDEX_NAME):
+            self.es.indices.create(
                 index=settings.INDEX_NAME,
                 body={
                     "mappings": {
@@ -67,7 +69,7 @@ class ElasticSearchService:
                 embedding=doc.embedding
             )
 
-            es.index(index=settings.INDEX_NAME, document=es_doc.dict())
+            self.es.index(index=settings.INDEX_NAME, document=es_doc.dict())
 
 
     def search(self, pdf_id: uuid.UUID, query_embedding: List[float], topk: int = 5) -> List[ElasticSearchResponse]:
@@ -92,7 +94,7 @@ class ElasticSearchService:
             "num_candidates": 50
         }
 
-        response = es.search(
+        response = self.es.search(
             index=settings.INDEX_NAME,
             query=query,
             knn=knn,
