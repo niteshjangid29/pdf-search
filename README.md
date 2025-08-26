@@ -71,7 +71,7 @@ For deploying this PDF search backend, a robust and scalable set of AWS services
     ```
 
 ### Lets go!
-The project is now set up and running! You can start using the PDF search API at
+The project is now set up and running! You can start using the PDF search API at [http://localhost:8000](http://localhost:8000)
 ```sh
 http://localhost:8000
 ```
@@ -95,9 +95,9 @@ This section covers endpoints related to user registration, login, and profile m
 Request Body:
 ```json
 {
-  "fullname": "John Doe",
-  "email": "john.doe@example.com",
-  "password": "a_strong_password"
+  "fullname": "Nitesh Jangid",
+  "email": "nitesh@gmail.com",
+  "password": "nitesh123"
 }
 ```
 
@@ -105,9 +105,10 @@ Success Response (200 OK):
 
 ```json
 {
-  "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
-  "fullname": "John Doe",
-  "email": "john.doe@example.com"
+    "email": "hitendra@gmail.com",
+    "fullname": "Hitendra",
+    "id": "ba39a875-53fc-470f-9210-cc2787c24f4b",
+    "created_at": "2025-08-26T14:44:15.284624"
 }
 ```
 
@@ -119,8 +120,8 @@ Success Response (200 OK):
 Request Body:
 ```json
 {
-  "email": "john.doe@example.com",
-  "password": "a_strong_password"
+  "email": "nitesh@gmail.com",
+  "password": "nitesh123"
 }
 ```
 
@@ -136,14 +137,15 @@ Success Response (200 OK):
 ### 3. Get User Profile
 - **Endpoint:** GET `/profile`
 - **Description:** Retrieves the profile information of the currently authenticated user.
-- **Authorization:** Bearer Token required.
+- **Authorization:** *Bearer Token* required.
 
 Success Response (200 OK):
 ```json
 {
-  "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
-  "fullname": "John Doe",
-  "email": "john.doe@example.com"
+    "email": "hitendra@gmail.com",
+    "fullname": "Hitendra",
+    "id": "ba39a875-53fc-470f-9210-cc2787c24f4b",
+    "created_at": "2025-08-26T14:44:15.284624"
 }
 ```
 
@@ -162,48 +164,78 @@ Authorization: Bearer <your_access_token>
 - **Authorization:** Bearer Token required.
 
 Request Body:
-- This is a multipart/form-data request. The file should be sent under the key file.
+- This is a multipart/form-data request. The file should be sent under the key `file`.
+
+<!-- upload an image -->
+![upload-pdf-api-demo](upload-pdf-api.png)
 
 Success Response (200 OK):
 
 Returns the metadata of the newly created PDF record.
 ```json
 {
-  "id": "f0e9d8c7-b6a5-4321-fedc-ba0987654321",
-  "user_id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
-  "file_name": "project_report.pdf",
-  "uploaded_at": "2025-08-26T15:00:00.456Z"
+    "id": "4e59d204-b32f-4e2f-a37a-cb38bff6852c",
+    "user_id": "ba39a875-53fc-470f-9210-cc2787c24f4b",
+    "file_name": "Stock-market (1).pdf",
+    "created_at": "2025-08-26T21:58:35.283575"
 }
 ```
+
+**Note:** `id` of the pdf is required in searching, so copy that.
 
 ### 2. Search Within a PDF
 - **Endpoint:** POST `/search`
 - **Description:** Performs a semantic search for a query string within a specific PDF document.
+- **Return:** Return top 5 search results
 - **Authorization:** Bearer Token required.
 
 Request Body:
 ```json
 {
-  "query": "project budget details",
-  "pdf_id": "f0e9d8c7-b6a5-4321-fedc-ba0987654321"
+    "query": "Stock Market",
+    "pdf_id": "4e59d204-b32f-4e2f-a37a-cb38bff6852c"
 }
 ```
 
 Success Response (200 OK):
+
 ```
 [
-  {
-    "type": "text",
-    "page_number": 5,
-    "content": "The total allocated budget for the project is $500,000, with a contingency of 15%.",
-    "score": 0.912
-  },
-  {
-    "type": "table",
-    "page_number": 6,
-    "content": "Table with Headers: Item, Cost. Row 1: Item is Phase 1 Development, Cost is $200,000.",
-    "score": 0.875
-  }
+    {
+        "pdf_id": "4e59d204-b32f-4e2f-a37a-cb38bff6852c",
+        "type": "text",
+        "page_number": 1,
+        "block_index": 2,
+        "content": "How the Stock Market Works"
+    },
+    {
+        "pdf_id": "4e59d204-b32f-4e2f-a37a-cb38bff6852c",
+        "type": "text",
+        "page_number": 3,
+        "block_index": 2,
+        "content": "Stock Market Analysis"
+    },
+    {
+        "pdf_id": "4e59d204-b32f-4e2f-a37a-cb38bff6852c",
+        "type": "text",
+        "page_number": 0,
+        "block_index": 2,
+        "content": "An Introduction to the Stock Market"
+    },
+    {
+        "pdf_id": "4e59d204-b32f-4e2f-a37a-cb38bff6852c",
+        "type": "text",
+        "page_number": 0,
+        "block_index": 3,
+        "content": "The stock market refers to the collection of markets and exchanges where the issuing and \ntrading of shares of publicly-held companies take place. It's a cornerstone of modern capitalism, \nproviding a platform for companies to raise capital for growth and for investors to own a piece of \nthose companies and share in their potential profits. At its core, the stock market is a dynamic \nenvironment where the ownership of corporations is bought and sold, driven by the collective \nassessment of their current and future value."
+    },
+    {
+        "pdf_id": "4e59d204-b32f-4e2f-a37a-cb38bff6852c",
+        "type": "text",
+        "page_number": 3,
+        "block_index": 0,
+        "content": "Value \nStocks"
+    }
 ]
 ```
 
@@ -215,17 +247,17 @@ Success Response (200 OK):
 Success Response (200 OK):
 ```
 [
-  {
-    "id": "f0e9d8c7-b6a5-4321-fedc-ba0987654321",
-    "user_id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
-    "file_name": "project_report.pdf",
-    "uploaded_at": "2025-08-26T15:00:00.456Z"
-  },
-  {
-    "id": "b1c2d3e4-f5a6-b789-c123-d4567890efab",
-    "user_id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
-    "file_name": "marketing_plan.pdf",
-    "uploaded_at": "2025-08-25T11:20:10.789Z"
-  }
+    {
+        "id": "4e59d204-b32f-4e2f-a37a-cb38bff6852c",
+        "user_id": "ba39a875-53fc-470f-9210-cc2787c24f4b",
+        "file_name": "Stock-market (1).pdf",
+        "created_at": "2025-08-26T21:58:35.283575"
+    },
+    {
+        "id": "f0e9d8c7-b6a5-4321-fedc-ba0987654321",
+        "user_id": "ba39a875-53fc-470f-9210-cc2787c24f4b",
+        "file_name": "project_report.pdf",
+        "created_at": "2025-08-26T21:58:35.283575"
+    }
 ]
 ```
